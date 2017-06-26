@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 21-May-2017 23:55:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.db.PoliceStation" table="police_station" catalog="trafic" optimistic-lock="version">
+        <id name="userIdusers" type="int">
+            <column name="user_idusers" />
+            <generator class="foreign">
+                <param name="property">user</param>
+            </generator>
+        </id>
+        <one-to-one name="user" class="model.db.User" constrained="true"></one-to-one>
+        <property name="stationName" type="string">
+            <column name="station_name" length="155" />
+        </property>
+        <set name="workingHistories" table="working_history" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="police_station_user_idusers" not-null="true" />
+            </key>
+            <one-to-many class="model.db.WorkingHistory" />
+        </set>
+        <set name="trafficOfficers" table="traffic_officer" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="police_station_user_idusers" not-null="true" />
+            </key>
+            <one-to-many class="model.db.TrafficOfficer" />
+        </set>
+        <set name="tickets" table="ticket" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="police_station_user_idusers" not-null="true" />
+            </key>
+            <one-to-many class="model.db.Ticket" />
+        </set>
+    </class>
+</hibernate-mapping>

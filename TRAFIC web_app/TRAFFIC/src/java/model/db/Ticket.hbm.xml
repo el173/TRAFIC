@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 21-May-2017 23:55:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.db.Ticket" table="ticket" catalog="trafic" optimistic-lock="version">
+        <id name="idticket" type="java.lang.Integer">
+            <column name="idticket" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="driver" class="model.db.Driver" fetch="select">
+            <column name="driver_iddriver" not-null="true" />
+        </many-to-one>
+        <many-to-one name="policeStation" class="model.db.PoliceStation" fetch="select">
+            <column name="police_station_user_idusers" not-null="true" />
+        </many-to-one>
+        <many-to-one name="status" class="model.db.Status" fetch="select">
+            <column name="status_idstatus" not-null="true" />
+        </many-to-one>
+        <many-to-one name="trafficOfficer" class="model.db.TrafficOfficer" fetch="select">
+            <column name="traffic_officer_user_idusers" not-null="true" />
+        </many-to-one>
+        <property name="issueDate" type="timestamp">
+            <column name="issue_date" length="19" />
+        </property>
+        <property name="drivingLicenceIddrivingLicence" type="string">
+            <column name="driving_licence_iddriving_licence" length="10" not-null="true" />
+        </property>
+        <property name="totalAmount" type="java.lang.Double">
+            <column name="total_amount" precision="22" scale="0" />
+        </property>
+        <property name="longitude" type="string">
+            <column name="longitude" length="45" />
+        </property>
+        <property name="latitude" type="string">
+            <column name="latitude" length="45" />
+        </property>
+        <property name="vechicleNumber" type="string">
+            <column name="vechicle_number" length="45" />
+        </property>
+        <set name="payments" table="payment" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ticket_idticket" not-null="true" />
+            </key>
+            <one-to-many class="model.db.Payment" />
+        </set>
+        <set name="fines" table="ticket_has_fine" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="ticket_idticket" not-null="true" />
+            </key>
+            <many-to-many entity-name="model.db.Fine">
+                <column name="fine_idfine" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.TRAFIC.Driver"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.TRAFIC.Driver"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.TRAFIC.Driver"
+        },
+        "com.paypal.cordova.mobilesdk": {
+            "PACKAGE_NAME": "com.TRAFIC.Driver"
+        }
+    },
+    "dependent_plugins": {
+        "card.io.cordova.mobilesdk": {
+            "PACKAGE_NAME": "com.TRAFIC.Driver"
+        }
+    }
+}

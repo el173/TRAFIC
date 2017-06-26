@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 21-May-2017 23:55:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.db.UserLogin" table="user_login" catalog="trafic" optimistic-lock="version">
+        <id name="iduser" type="java.lang.Integer">
+            <column name="iduser" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="user" class="model.db.User" fetch="select">
+            <column name="user_idusers" not-null="true" />
+        </many-to-one>
+        <property name="loggedDatetime" type="timestamp">
+            <column name="logged_datetime" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

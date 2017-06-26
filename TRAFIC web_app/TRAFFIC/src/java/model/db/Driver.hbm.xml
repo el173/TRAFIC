@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 21-May-2017 23:55:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.db.Driver" table="driver" catalog="trafic" optimistic-lock="version">
+        <id name="iddriver" type="java.lang.Integer">
+            <column name="iddriver" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="status" class="model.db.Status" fetch="select">
+            <column name="status_idstatus" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="150" />
+        </property>
+        <property name="licenceNumber" type="string">
+            <column name="licence_number" length="10" unique="true" />
+        </property>
+        <set name="payments" table="payment" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="driver_iddriver" />
+            </key>
+            <one-to-many class="model.db.Payment" />
+        </set>
+        <set name="tickets" table="ticket" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="driver_iddriver" not-null="true" />
+            </key>
+            <one-to-many class="model.db.Ticket" />
+        </set>
+    </class>
+</hibernate-mapping>

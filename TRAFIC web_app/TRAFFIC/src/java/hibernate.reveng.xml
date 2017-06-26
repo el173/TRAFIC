@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="trafic"/>
+  <table-filter match-name="police_station"/>
+  <table-filter match-name="traffic_officer"/>
+  <table-filter match-name="user_type"/>
+  <table-filter match-name="payment"/>
+  <table-filter match-name="user"/>
+  <table-filter match-name="fine"/>
+  <table-filter match-name="working_history"/>
+  <table-filter match-name="ticket"/>
+  <table-filter match-name="status"/>
+  <table-filter match-name="user_login"/>
+  <table-filter match-name="ticket_has_fine"/>
+  <table-filter match-name="driver"/>
+</hibernate-reverse-engineering>

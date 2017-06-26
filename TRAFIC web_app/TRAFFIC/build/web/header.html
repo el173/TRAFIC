@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<script>
+    var ENCRYPT = 1;
+    var DECRYPT = 2;
+    $(document).ready(function () {
+        $.post('GetLoggedUserName', {}, function (data, status) {
+            $('#policeStation').html(data);
+        });
+        $('#logout').on('click', function () {
+            changePage('logout', ENCRYPT);
+        });
+        $('#home').on('click', function () {
+            changePage('home', ENCRYPT);
+        });
+        $('#home_1').on('click', function () {
+            changePage('home', ENCRYPT);
+        });
+        $('#reg').on('click', function () {
+            changePage('reg', ENCRYPT);
+        });
+        $('#ticket').on('click', function () {
+            changePage('tick', ENCRYPT);
+        });
+        $('#driver').on('click', function () {
+            changePage('driver', ENCRYPT);
+        });
+
+        $.post('Encryptor', {sParam: getUrlParameter('sParam') + '=', type: DECRYPT}, function (data, status) {
+            if (data === 'home' || data === null || data === '') {
+                $('#home_li').addClass('selected');
+            } else if (data === 'reg') {
+                $('#reg_li').addClass('selected');
+            } else if (data === 'tick') {
+                $('#ticket_li').addClass('selected');
+            } else if (data === 'driver') {
+                $('#driver_li').addClass('selected');
+            }
+        });
+    });
+
+    function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    }
+    function changePage(param, enc_type) {
+        $.post('Encryptor', {sParam: param, type: enc_type}, function (data, status) {
+            window.history.pushState('obj', 'newtitle', '/TRAFIC/ActionController?sParam=' + data);
+            window.location.reload();
+            return false;
+        });
+    }
+</script>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a id="home" class="navbar-brand" href="#">TRAFIC Police Station</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul id="active" class="nav navbar-nav side-nav">
+            <li id="home_li"><a id="home_1" href="#"><i class="fa fa-bullseye"></i> Dashboard</a></li>
+            <li id="ticket_li"><a id="ticket" href="#"><i class="fa fa-tasks"></i> Tickets</a></li>
+            <li id="reg_li"><a id="reg" href="#"><i class="fa fa-font"></i> Officers</a></li>
+            <li id="driver_li"><a id="driver" href="#"><i class="fa fa-list-ol"></i> Drivers</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right navbar-user">
+            <!--            <li class="dropdown messages-dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> Messages <span class="badge">2</span> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header">2 New Messages</li>
+                                <li class="message-preview">
+                                    <a href="#">
+                                        <span class="avatar"><i class="fa fa-bell"></i></span>
+                                        <span class="message">Security alert</span>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="message-preview">
+                                    <a href="#">
+                                        <span class="avatar"><i class="fa fa-bell"></i></span>
+                                        <span class="message">Security alert</span>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="#">Go to Inbox <span class="badge">2</span></a></li>
+                            </ul>
+                        </li>-->
+            <li class="dropdown user-dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <asd id="policeStation"> Police Station </asd> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                    <li class="divider"></li>
+                    <li><a id="logout" ><i class="fa fa-power-off"></i> Log Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+

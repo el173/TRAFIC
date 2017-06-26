@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+        <!--<link rel="stylesheet" type="text/css" href="css/index.css">-->
+        <link rel="stylesheet" type="text/css" href="css/myStyle.css">
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" type="text/css">
+
+        <script src="js/jquery-1.12.4.min.js" type="text/javascript"></script>
+        <script src="js/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>
+        <script src="js/jquery.validate.min.js" type="text/javascript"></script>
+
+        <title>TRAFIC Officer</title>
+    </head>
+    <body>
+        <div data-role="page" class="page" id="page1">
+            <div id="login">
+                <div data-role="header"><br>
+                    <h1>TRAFIC Officer</h1>
+                </div>
+                <div data-role="main" class="ui-content">
+                    <form id="formLogin">
+                        <label for="username">Username</label>
+                        <input type="text" data-clear-btn="true" name="txtUserName" id="txtUserName" value="">
+                        <label for="password">Password</label>
+                        <input type="password" data-clear-btn="true" name="txtPassword" id="txtPassword" value="" autocomplete="off">
+<!--                        <label for="police">Police Station</label>
+                        <input type="text" name="txtPolice" id="txtPolice" value="" data-clear-btn="true" autocomplete="on" list="station_list" placeholder="Select...">
+                        <datalist id="station_list"></datalist>-->
+                        <br>
+                        <button type="submit" id="btnLogin" class="ui-btn ui-btn-b">Login</button>
+                    </form>
+                </div>
+                <div data-role="footer" class="dFooter">
+                    <h1>TRAFIC Officer v1.0.0 &COPY; <a target="_blank" href="http://duractteam.com/">DURACT</a></h1>
+                </div>
+            </div>
+
+            <div id="officerHome">
+                <div data-role="header" style="overflow:hidden;">
+                    <h1>TRAFIC - Issue a Ticket</h1>
+                        <a href="#" id="btnSignOut" data-icon="power" class="ui-btn-right">Sign Out</a>
+                </div><!-- /header -->
+                <div data-role="main" class="ui-content">
+                    <form id="formDriverCheck">
+                        <label for="txtLicenseNumber">Enter Driving License Number :</label>
+                        <input type="text" name="txtLicenseNumber" id="txtLicenseNumber" value="" 
+                               data-clear-btn="true" autocomplete="on" list="license_list" placeholder="License Number">
+                        <datalist id="license_list"></datalist>
+                        <button type="submit" id="btnCheckStatus"
+                                class="ui-nodisc-icon ui-btn ui-shadow ui-corner-all 
+                                ui-icon-search ui-btn-icon-left ui-btn-active">Check Status</button>
+                    </form>
+                    <br/>
+                    <div id="driverDetails">
+                        <div class="ui-grid-b">
+                            <div class="ui-block-a">
+                                <label>Driver Name :</label>
+                                <label id="driverName">n/a</label>
+                            </div>
+                            <div class="ui-block-b">
+                                <label>License Status :</label>
+                                <label id="driverStatus"><b>Active</b></label>                                   
+                            </div>
+                            <div class="ui-block-c">
+                                <label>Previous Offense :</label>
+                                <label id="driverHistory"><b>N/A</b></label> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="viewTicket">
+                        <div class="ui-grid-a">
+                            <div class="ui-block-a">
+                                <div data-role="fieldcontain">
+                                    <label for="txtOffence">Offence</label>
+                                    <input type="text" name="txtOffence" id="txtOffence" 
+                                           value="" data-clear-btn="true" autocomplete="on" list="offense_list" placeholder="Enter..."/>
+                                    <datalist id="offense_list"></datalist>
+                                </div>
+                            </div>
+                            <div class="ui-block-b">
+                                <a href="#" id="btnAddTicket" class="ui-btn ui-btn-inline ui-icon-action
+                                   ui-btn-icon-bottom  ui-shadow-icon ui-btn-b">Add</a>
+                            </div>
+                        </div>
+                        <div id="ticketItem">
+                            <table data-role="table" id="tblOfence" data-mode="reflow" class="ui-responsive">
+                                <thead>
+                                    <tr>
+                                        <th data-priority="1" id="idcell"><b>Offence ID</b></th>
+                                        <th data-priority="2"><b>Offence</b></th>
+                                        <th data-priority="3"><b>Penalty</b></th>
+                                    </tr>
+                                </thead>
+                                  <tbody>
+                                </tbody>
+                            </table>
+                            <b><h3 id="total_amout"></h3></b>
+                            <div class="ui-block-a">
+                                <div data-role="fieldcontain">
+                                    <label for="txtVechicle">Vehicle Number</label>
+                                    <input type="text" name="txtVechicle" id="txtVechicle" 
+                                           value="" data-clear-btn="true" placeholder="Enter..."/>
+                                </div>
+                            </div>
+                            <input id="btnIssueTicket" type="button" data-inline="true" value="Add Traffic Ticket">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+    </body>
+</html>
