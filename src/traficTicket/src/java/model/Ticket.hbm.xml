@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 17, 2018 1:36:10 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="trafic_hgw" name="model.Ticket" optimistic-lock="version" table="ticket">
+    <id name="idticket" type="java.lang.Integer">
+      <column name="idticket"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="model.EntranceExit" fetch="select" name="entranceExitByEnd">
+      <column name="end" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="model.EntranceExit" fetch="select" name="entranceExitByStart">
+      <column name="start" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="model.Vehicle" fetch="select" name="vehicle">
+      <column name="vehicle_idvehicle" not-null="true"/>
+    </many-to-one>
+    <property name="amount" type="java.lang.Double">
+      <column name="amount" precision="22" scale="0"/>
+    </property>
+    <set fetch="select" inverse="false" lazy="true" name="fines" table="ticket_has_fine">
+      <key>
+        <column name="ticket_idticket" not-null="true"/>
+      </key>
+      <many-to-many entity-name="modell.Fine">
+        <column name="fine_idfine" not-null="true"/>
+      </many-to-many>
+    </set>
+  </class>
+</hibernate-mapping>
