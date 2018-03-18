@@ -46,9 +46,9 @@ Contributor(s):
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/trafic_hgw?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">12345</property>
+    <mapping resource="model/Fine.hbm.xml"/>
+    <mapping resource="model/Ticket.hbm.xml"/>
     <mapping resource="model/EntranceExit.hbm.xml"/>
     <mapping resource="model/Vehicle.hbm.xml"/>
-    <mapping resource="model/Ticket.hbm.xml"/>
-    <mapping resource="model/Fine.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

@@ -5,6 +5,7 @@
  */
 package controller.ticket.servlet;
 
+import controller.ticket.action.Vehicle;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,9 +40,21 @@ public class issueTicket extends HttpServlet {
             try {
                 String vehicleNumber = request.getParameter("vch_number");
                 float speed = Float.parseFloat(request.getParameter("speed"));
-
-                out_object.put("success", true);
-                out_object.put("data", null);
+                
+                Vehicle vehicleAction = new Vehicle();
+                model.Vehicle vehicleByNumber = vehicleAction.getVehicleByNumber(vehicleNumber);
+                
+                if(vehicleByNumber != null) {
+                    
+                    
+                    
+                    out_object.put("success", true);
+                    out_object.put("data", vehicleByNumber.getNumber());
+                }else {
+                    out_object.put("success", false);
+                    out_object.put("info", "vehicle_not_found");
+                }
+                
             } catch (Exception e) {
                 out_object.put("success", false);
                 out_object.put("info", "error_in_action");
