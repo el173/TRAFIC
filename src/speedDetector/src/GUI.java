@@ -1,15 +1,8 @@
-import com.opencsv.CSVWriter;
-import jxl.Cell;
-import jxl.Workbook;
-import jxl.write.Number;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.VideoWriter;
 import org.opencv.videoio.Videoio;
 
 import javax.swing.*;
@@ -17,10 +10,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.opencv.imgproc.Imgproc.resize;
@@ -33,7 +24,6 @@ public class GUI {
 
     private JButton playPauseButton;
     JButton loadButton;
-    private JButton saveButton;
     private JButton resetButton;
     private JButton countingLineButton;
     private JButton speedLineButton;
@@ -67,27 +57,7 @@ public class GUI {
     private int whichFrame;
     private JSpinner distanceBLfield;
 
-    private File fileToSaveXLS;
-    private WritableWorkbook workbook;
-    private WritableSheet sheet;
-    private jxl.write.Label label;
-    private Number number;
-
-
-    private CSVWriter CSVwriter;
-    private ArrayList<String[]> ListCSV = new ArrayList<>();
-    private FileWriter filetoSaveCSV;
-
-    private JRadioButton xlsButton;
-    private JRadioButton csvButton;
-    private static final String xlsWriteResults = "XLS";
-    private static final String csvWriteResults = "CSV";
-    private String writeFlag = xlsWriteResults;
-    private boolean isExcelToWrite = true;
-    private boolean isWritten = false;
-
     private volatile String videoPath;
-    private volatile String savePath;
 
     private JFormattedTextField carsAmountField;
     private JFormattedTextField carsSpeedField;
@@ -96,25 +66,9 @@ public class GUI {
     private JFormattedTextField lorriesAmountField;
     private JFormattedTextField lorriesSpeedField;
 
-    private int cars = 0;
-    private int vans = 0;
-    private int lorries = 0;
-
-    private double sumSpeedCar = 0;
-    private double sumSpeedVan = 0;
-    private double sumSpeedLorry = 0;
-
-    private int divisorCar = 1;
-    private int divisorVan = 1;
-    private int divisorLorry = 1;
-
-    private JRadioButton onButton;
-    private JRadioButton offButton;
-    private static final String onSaveVideo = "On";
-    private static final String offSaveVideo = "Off";
-    private String saveFlag = offSaveVideo;
-    private boolean isToSave = false;
-    private VideoWriter videoWriter;
+    private int numberOfVehicles = 0;
+    private double sumSpeedVehicle = 0;
+    private int divisorVehicle = 1;
 
     private boolean mouseListenertIsActive;
     private boolean mouseListenertIsActive2;
@@ -136,7 +90,7 @@ public class GUI {
     private int second = 0;
 
     private JButton realTimeButton;
-    private volatile boolean isProcessInRealTime = false;
+    private volatile boolean isProcessInRealTime = true;
     private long startTime;
     private long oneFrameDuration;
 
@@ -219,8 +173,6 @@ public class GUI {
                             }
 
 
-                            videoRealTime();
-
                             if (isProcessInRealTime) {
                                 long time = System.currentTimeMillis() - startTime;
                                 if (time < oneFrameDuration) {
@@ -241,8 +193,6 @@ public class GUI {
                         } else {
 
                             playPauseButton.setEnabled(false);
-
-                            saveButton.setEnabled(true);
                             loadButton.setEnabled(true);
 
                             playPauseButton.setText("Play");
@@ -264,22 +214,8 @@ public class GUI {
             counter++;
             lastTSM++;
             speed.put(lastTSM, 0);
-            String vehicleType = countVehicles.classifier();
-            switch (vehicleType) {
-                case "Car":
-                    cars++;
-                    carsAmountField.setValue(cars);
-                    break;
-                case "Van":
-                    vans++;
-                    vansAmountField.setValue(vans);
-                    break;
-                case "Lorry":
-                    lorries++;
-                    lorriesAmountField.setValue(lorries);
-                    break;
-            }
-
+            numberOfVehicles++;
+            lorriesAmountField.setValue(numberOfVehicles);
         }
         crossingLine = countVehicles.isCrossingLine();
     }
@@ -296,9 +232,9 @@ public class GUI {
 
                 double currentSpeed = computeSpeed(speed.get(firstTSM));
 
-                sumSpeedLorry = sumSpeedLorry + currentSpeed;
-                double avgspeed3 = sumSpeedLorry / divisorLorry;
-                divisorLorry++;
+                sumSpeedVehicle = sumSpeedVehicle + currentSpeed;
+                double avgspeed3 = sumSpeedVehicle / divisorVehicle;
+                divisorVehicle++;
                 lorriesSpeedField.setValue(avgspeed3);
 
 
@@ -311,8 +247,8 @@ public class GUI {
                         speed.put(i, (currentFPS + 1));
                         if (currentFPS > maxFPS) {
                             speed.remove(i);
-                            lorries--;
-                            lorriesAmountField.setValue(lorries);
+                            numberOfVehicles--;
+                            lorriesAmountField.setValue(numberOfVehicles);
                         }
                     }
                 }
@@ -329,7 +265,6 @@ public class GUI {
 
         reset(frame);
         playPause(frame);
-        setupWriteType(frame);
 
         loadFile(frame);
 
@@ -348,7 +283,6 @@ public class GUI {
 
         setupBGSvisibility(frame);
         currentTime(frame);
-        setupRealTime(frame);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         return frame;
@@ -383,17 +317,10 @@ public class GUI {
                 playPauseButton.setText("Play");
 
                 loadButton.setEnabled(true);
-                saveButton.setEnabled(true);
-
-                onButton.setEnabled(false);
-                offButton.setEnabled(false);
 
                 countingLineButton.setEnabled(true);
                 distanceBLfield.setEnabled(true);
                 speedLineButton.setEnabled(true);
-
-                xlsButton.setEnabled(false);
-                csvButton.setEnabled(false);
 
             } else {
                 isPaused = false;
@@ -403,15 +330,11 @@ public class GUI {
 
                 loadButton.setEnabled(false);
 
-                onButton.setEnabled(false);
-                offButton.setEnabled(false);
 
                 countingLineButton.setEnabled(false);
                 distanceBLfield.setEnabled(false);
                 speedLineButton.setEnabled(false);
 
-                xlsButton.setEnabled(false);
-                csvButton.setEnabled(false);
                 frame.pack();
             }
         });
@@ -605,41 +528,11 @@ public class GUI {
         oneFrameDuration = 1000 / (long) videoFPS;
     }
 
-    public void writeToCSV(FileWriter fileWriter) throws IOException {
-        CSVwriter = new CSVWriter(fileWriter, '\t');
-        ListCSV.add("No.#Vehicle type#Speed [km/h]#Video time [sec]".split("#"));
-    }
-
-    private void addNumberDouble(WritableSheet sheet, int column, int row, Double d)
-            throws WriteException {
-
-        number = new Number(column, row, d);
-        sheet.addCell(number);
-    }
 
     public double computeSpeed(int speedPFS) {
         double duration = speedPFS / videoFPS;
         double v = (distanceCS / duration) * 3.6;
         return v;
-    }
-
-    private double videoRealTime() {
-        whichFrame++;
-        timeInSec = whichFrame / videoFPS;
-        setTimeInMinutes();
-        return timeInSec;
-    }
-
-    private void setTimeInMinutes() {
-        if (timeInSec < 60) {
-            currentTimeField.setValue((int) timeInSec + " sec");
-        } else if (second < 60) {
-            second = (int) timeInSec - (60 * minutes);
-            currentTimeField.setValue(minutes + " min " + second + " sec");
-        } else {
-            second = 0;
-            minutes++;
-        }
     }
 
     private static ImageIcon createImageIcon(String path) {
@@ -678,12 +571,6 @@ public class GUI {
 
                 resetButton.setEnabled(false);
 
-                onButton.setEnabled(true);
-                offButton.setEnabled(true);
-
-                xlsButton.setEnabled(true);
-                csvButton.setEnabled(true);
-
                 countingLineButton.setEnabled(true);
                 speedLineButton.setEnabled(true);
                 distanceBLfield.setEnabled(true);
@@ -704,43 +591,12 @@ public class GUI {
                 lorriesAmountField.setValue(new Integer(0));
                 lorriesSpeedField.setValue(new Integer(0));
 
-                cars = 0;
-                vans = 0;
-                lorries = 0;
-
-                sumSpeedCar = 0;
-                sumSpeedVan = 0;
-                sumSpeedLorry = 0;
-
-                divisorCar = 1;
-                divisorVan = 1;
-                divisorLorry = 1;
+                numberOfVehicles = 0;
+                sumSpeedVehicle = 0;
+                divisorVehicle = 1;
 
                 counter = 0;
                 lastTSM = 0;
-
-                if (isToSave)
-                    videoWriter.release();
-
-                if (!isWritten) {
-                    try {
-                        workbook.write();
-                        workbook.close();
-                    } catch (IOException | WriteException e) {
-                        e.printStackTrace();
-                    }
-                    if (!isExcelToWrite) {
-                        try {
-                            CSVwriter.writeAll(ListCSV);
-                            CSVwriter.close();
-                            new File(savePath + "\\Results.xls").delete();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                    isWritten = true;
-                }
 
                 Thread reseting = new Thread(new Reseting());
                 reseting.start();
@@ -771,67 +627,13 @@ public class GUI {
                     playPauseButton.setEnabled(true);
                     resetButton.setEnabled(true);
 
-                    onButton.setEnabled(false);
-                    offButton.setEnabled(false);
-
-                    xlsButton.setEnabled(false);
-                    csvButton.setEnabled(false);
-
                     Thread mainLoop = new Thread(new Loop());
                     mainLoop.start();
-
-                    isWritten = false;
 
                     break;
                 }
             }
         }
-    }
-
-    private void setupWriteType(JFrame frame) {
-
-        xlsButton = new JRadioButton(xlsWriteResults);
-        xlsButton.setMnemonic(KeyEvent.VK_O);
-        xlsButton.setActionCommand(xlsWriteResults);
-        xlsButton.setSelected(true);
-        xlsButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        csvButton = new JRadioButton(csvWriteResults);
-        csvButton.setMnemonic(KeyEvent.VK_F);
-        csvButton.setActionCommand(csvWriteResults);
-        csvButton.setSelected(false);
-        csvButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(xlsButton);
-        group.add(csvButton);
-
-        ActionListener operationChangeListener = event -> {
-            writeFlag = event.getActionCommand();
-            isExcelToWrite = (writeFlag.equals(xlsWriteResults)) ? true : false;
-        };
-
-        xlsButton.addActionListener(operationChangeListener);
-        csvButton.addActionListener(operationChangeListener);
-
-        GridLayout gridRowLayout = new GridLayout(1, 0);
-        JPanel writeOperationPanel = new JPanel(gridRowLayout);
-
-        JLabel writeLabel = new JLabel("Write the results to:", JLabel.CENTER);
-
-        writeOperationPanel.add(xlsButton);
-        writeOperationPanel.add(csvButton);
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(0, 0, 5, 0);
-
-        c.gridx = 0;
-        c.gridy = 2;
-        frame.add(writeLabel, c);
-
-        c.gridx = 1;
-        frame.add(writeOperationPanel, c);
     }
 
     private void setupDistanceBetweenLines(JFrame frame) {
