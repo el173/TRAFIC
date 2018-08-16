@@ -7,10 +7,10 @@ import java.io.IOException;
 public class Application {
     static {
         try {
-            System.loadLibrary(Core.NATIVE_LIBRARY_NAME); // used for tests. This library in classpath only
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         } catch (UnsatisfiedLinkError e) {
             try {
-                NativeUtils.loadLibraryFromJar("opencv_java310"); // during runtime. .DLL within .JAR
+                NativeUtils.loadLibraryFromJar("opencv_java310");
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
