@@ -21,8 +21,9 @@ public class Ticket {
         }
     }
     
-    public boolean addSpeedFineToTicket(Vehicle vehicle) {
-        
+    public boolean addSpeedFineToTicket(model.Vehicle vehicle, float speed) {
+        model.Ticket ticket = (model.Ticket) session.load(model.Ticket.class, vehicle.getTicket().getIdticket());
+        model.Fine fine = (model.Fine) session.load(model.Fine.class, model.Fine.HIGH_SPEED_FINE);
         return false;
     }
 }

@@ -1,21 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Mar 18, 2018 7:17:57 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated Mar 18, 2018 7:40:06 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="model.Vehicle" table="vehicle" catalog="trafic_hgw" optimistic-lock="version">
         <id name="idvehicle" type="java.lang.Integer">
             <column name="idvehicle" />
             <generator class="identity" />
         </id>
+        <many-to-one name="ticket" class="model.Ticket" fetch="select">
+            <column name="ticket_idticket" not-null="true" />
+        </many-to-one>
         <property name="number" type="string">
             <column name="number" length="45" not-null="true" />
         </property>
-        <set name="tickets" table="ticket" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="vehicle_idvehicle" not-null="true" />
-            </key>
-            <one-to-many class="model.Ticket" />
-        </set>
     </class>
 </hibernate-mapping>

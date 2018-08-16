@@ -26,7 +26,9 @@ public class Vehicle {
     public model.Vehicle getVehicleByNumber(String vehicleNum) {
         Criteria c = session.createCriteria(model.Vehicle.class);
         c.add(Restrictions.eq("number", vehicleNum.toUpperCase()));
-        return (model.Vehicle) c.uniqueResult();
+        model.Vehicle vehicle = (model.Vehicle) c.uniqueResult();
+        session.close();
+        return vehicle;
     }
     
 }

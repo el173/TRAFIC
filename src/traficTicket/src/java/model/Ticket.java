@@ -1,7 +1,8 @@
 package model;
-// Generated Mar 18, 2018 7:17:56 AM by Hibernate Tools 4.3.1
+// Generated Mar 18, 2018 7:40:05 AM by Hibernate Tools 4.3.1
 
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,24 +15,27 @@ public class Ticket  implements java.io.Serializable {
      private Integer idticket;
      private EntranceExit entranceExitByEnd;
      private EntranceExit entranceExitByStart;
-     private Vehicle vehicle;
      private Double amount;
+     private Date inTime;
+     private Date outTime;
+     private Set vehicles = new HashSet(0);
      private Set fines = new HashSet(0);
 
     public Ticket() {
     }
 
 	
-    public Ticket(EntranceExit entranceExitByEnd, EntranceExit entranceExitByStart, Vehicle vehicle) {
+    public Ticket(EntranceExit entranceExitByEnd, EntranceExit entranceExitByStart) {
         this.entranceExitByEnd = entranceExitByEnd;
         this.entranceExitByStart = entranceExitByStart;
-        this.vehicle = vehicle;
     }
-    public Ticket(EntranceExit entranceExitByEnd, EntranceExit entranceExitByStart, Vehicle vehicle, Double amount, Set fines) {
+    public Ticket(EntranceExit entranceExitByEnd, EntranceExit entranceExitByStart, Double amount, Date inTime, Date outTime, Set vehicles, Set fines) {
        this.entranceExitByEnd = entranceExitByEnd;
        this.entranceExitByStart = entranceExitByStart;
-       this.vehicle = vehicle;
        this.amount = amount;
+       this.inTime = inTime;
+       this.outTime = outTime;
+       this.vehicles = vehicles;
        this.fines = fines;
     }
    
@@ -56,19 +60,33 @@ public class Ticket  implements java.io.Serializable {
     public void setEntranceExitByStart(EntranceExit entranceExitByStart) {
         this.entranceExitByStart = entranceExitByStart;
     }
-    public Vehicle getVehicle() {
-        return this.vehicle;
-    }
-    
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
     public Double getAmount() {
         return this.amount;
     }
     
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+    public Date getInTime() {
+        return this.inTime;
+    }
+    
+    public void setInTime(Date inTime) {
+        this.inTime = inTime;
+    }
+    public Date getOutTime() {
+        return this.outTime;
+    }
+    
+    public void setOutTime(Date outTime) {
+        this.outTime = outTime;
+    }
+    public Set getVehicles() {
+        return this.vehicles;
+    }
+    
+    public void setVehicles(Set vehicles) {
+        this.vehicles = vehicles;
     }
     public Set getFines() {
         return this.fines;

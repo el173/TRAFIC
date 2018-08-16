@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Mar 18, 2018 7:17:57 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated Mar 18, 2018 7:40:06 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="model.Ticket" table="ticket" catalog="trafic_hgw" optimistic-lock="version">
         <id name="idticket" type="java.lang.Integer">
@@ -14,12 +14,21 @@
         <many-to-one name="entranceExitByStart" class="model.EntranceExit" fetch="select">
             <column name="start" not-null="true" />
         </many-to-one>
-        <many-to-one name="vehicle" class="model.Vehicle" fetch="select">
-            <column name="vehicle_idvehicle" not-null="true" />
-        </many-to-one>
         <property name="amount" type="java.lang.Double">
             <column name="amount" precision="22" scale="0" />
         </property>
+        <property name="inTime" type="timestamp">
+            <column name="in_time" length="19" />
+        </property>
+        <property name="outTime" type="timestamp">
+            <column name="out_time" length="19" />
+        </property>
+        <set name="vehicles" table="vehicle" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ticket_idticket" not-null="true" />
+            </key>
+            <one-to-many class="model.Vehicle" />
+        </set>
         <set name="fines" table="ticket_has_fine" inverse="false" lazy="true" fetch="select">
             <key>
                 <column name="ticket_idticket" not-null="true" />
