@@ -59,12 +59,8 @@ public class GUI {
 
     private volatile String videoPath;
 
-    private JFormattedTextField carsAmountField;
-    private JFormattedTextField carsSpeedField;
-    private JFormattedTextField vansAmountField;
-    private JFormattedTextField vansSpeedField;
-    private JFormattedTextField lorriesAmountField;
-    private JFormattedTextField lorriesSpeedField;
+    private JFormattedTextField vehicleAmountField;
+    private JFormattedTextField vehicleSpeedField;
 
     private int numberOfVehicles = 0;
     private double sumSpeedVehicle = 0;
@@ -84,7 +80,6 @@ public class GUI {
 
     private JSpinner videoHistoryField;
 
-    private JFormattedTextField currentTimeField;
     private double timeInSec;
     private int minutes = 1;
     private int second = 0;
@@ -215,7 +210,7 @@ public class GUI {
             lastTSM++;
             speed.put(lastTSM, 0);
             numberOfVehicles++;
-            lorriesAmountField.setValue(numberOfVehicles);
+            vehicleAmountField.setValue(numberOfVehicles);
         }
         crossingLine = countVehicles.isCrossingLine();
     }
@@ -235,7 +230,7 @@ public class GUI {
                 sumSpeedVehicle = sumSpeedVehicle + currentSpeed;
                 double avgspeed3 = sumSpeedVehicle / divisorVehicle;
                 divisorVehicle++;
-                lorriesSpeedField.setValue(avgspeed3);
+                vehicleSpeedField.setValue(avgspeed3);
 
 
                 speed.remove(firstTSM);
@@ -248,7 +243,7 @@ public class GUI {
                         if (currentFPS > maxFPS) {
                             speed.remove(i);
                             numberOfVehicles--;
-                            lorriesAmountField.setValue(numberOfVehicles);
+                            vehicleAmountField.setValue(numberOfVehicles);
                         }
                     }
                 }
@@ -268,9 +263,7 @@ public class GUI {
 
         loadFile(frame);
 
-        infoCars(frame);
-        infoVans(frame);
-        infoLorries(frame);
+        infoVehicles(frame);
 
         selectCountingLine(frame);
         selectSpeedLine(frame);
@@ -280,9 +273,7 @@ public class GUI {
         setupVideoHistory(frame);
         setupAreaThreshold(frame);
         setupVehicleSizeThreshold(frame);
-
         setupBGSvisibility(frame);
-        currentTime(frame);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         return frame;
@@ -290,8 +281,6 @@ public class GUI {
 
     private void setupVideo(JFrame frame) {
         imageView = new JLabel();
-
-
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
@@ -315,9 +304,7 @@ public class GUI {
             if (!isPaused) {
                 isPaused = true;
                 playPauseButton.setText("Play");
-
                 loadButton.setEnabled(true);
-
                 countingLineButton.setEnabled(true);
                 distanceBLfield.setEnabled(true);
                 speedLineButton.setEnabled(true);
@@ -325,12 +312,8 @@ public class GUI {
             } else {
                 isPaused = false;
                 playPauseButton.setText("Pause");
-
                 maxWaitingFPS();
-
                 loadButton.setEnabled(false);
-
-
                 countingLineButton.setEnabled(false);
                 distanceBLfield.setEnabled(false);
                 speedLineButton.setEnabled(false);
@@ -355,7 +338,7 @@ public class GUI {
         JTextField field = new JTextField();
         field.setText(" ");
         field.setEditable(false);
-
+        field.setPreferredSize(new Dimension(400, 20));
         loadButton = new JButton("Open a video", createImageIcon("resources/Open16.gif"));
 
         JFileChooser fc = new JFileChooser();
@@ -398,30 +381,30 @@ public class GUI {
         frame.add(field, c);
     }
 
-    private void infoCars(JFrame frame) {
+    private void infoVehicles(JFrame frame) {
         JLabel quantityLabel = new JLabel("Quantity", JLabel.RIGHT);
         quantityLabel.setFont(new Font("defaut", Font.BOLD, 12));
 
         JLabel averageLabel = new JLabel("Average speed [km/h]", JLabel.RIGHT);
         averageLabel.setFont(new Font("defaut", Font.BOLD, 12));
 
-        JLabel carsLabel = new JLabel("Cars", JLabel.CENTER);
+        JLabel carsLabel = new JLabel("Vehicle", JLabel.CENTER);
         carsLabel.setFont(new Font("defaut", Font.BOLD, 12));
 
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        carsAmountField = new JFormattedTextField(numberFormat);
-        carsAmountField.setValue(new Integer(0));
-        carsAmountField.setBackground(Color.YELLOW);
-        carsAmountField.setEditable(false);
-        carsAmountField.setPreferredSize(new Dimension(50, 20));
-        carsAmountField.setHorizontalAlignment(JFormattedTextField.CENTER);
+        vehicleAmountField = new JFormattedTextField(numberFormat);
+        vehicleAmountField.setValue(new Integer(0));
+        vehicleAmountField.setBackground(Color.YELLOW);
+        vehicleAmountField.setEditable(false);
+        vehicleAmountField.setPreferredSize(new Dimension(50, 20));
+        vehicleAmountField.setHorizontalAlignment(JFormattedTextField.CENTER);
 
-        carsSpeedField = new JFormattedTextField(numberFormat);
-        carsSpeedField.setValue(new Integer(0));
-        carsSpeedField.setBackground(Color.GREEN);
-        carsSpeedField.setEditable(false);
-        carsSpeedField.setPreferredSize(new Dimension(50, 20));
-        carsSpeedField.setHorizontalAlignment(JFormattedTextField.CENTER);
+        vehicleSpeedField = new JFormattedTextField(numberFormat);
+        vehicleSpeedField.setValue(new Integer(0));
+        vehicleSpeedField.setBackground(Color.GREEN);
+        vehicleSpeedField.setEditable(false);
+        vehicleSpeedField.setPreferredSize(new Dimension(50, 20));
+        vehicleSpeedField.setHorizontalAlignment(JFormattedTextField.CENTER);
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -440,80 +423,10 @@ public class GUI {
         frame.add(carsLabel, c);
 
         c.gridy = 12;
-        frame.add(carsAmountField, c);
+        frame.add(vehicleAmountField, c);
 
         c.gridy = 13;
-        frame.add(carsSpeedField, c);
-    }
-
-    private void infoVans(JFrame frame) {
-
-        JLabel vansLabel = new JLabel("Vans", JLabel.CENTER);
-        vansLabel.setFont(new Font("defaut", Font.BOLD, 12));
-
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        vansAmountField = new JFormattedTextField(numberFormat);
-        vansAmountField.setValue(new Integer(0));
-        vansAmountField.setBackground(Color.YELLOW);
-        vansAmountField.setEditable(false);
-        vansAmountField.setPreferredSize(new Dimension(50, 20));
-        vansAmountField.setHorizontalAlignment(JFormattedTextField.CENTER);
-
-        vansSpeedField = new JFormattedTextField(numberFormat);
-        vansSpeedField.setValue(new Integer(0));
-        vansSpeedField.setBackground(Color.GREEN);
-        vansSpeedField.setEditable(false);
-        vansSpeedField.setPreferredSize(new Dimension(50, 20));
-        vansSpeedField.setHorizontalAlignment(JFormattedTextField.CENTER);
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 5;
-        c.gridy = 11;
-        c.gridwidth = 1;
-        c.insets = new Insets(0, 5, 5, 5);
-        frame.add(vansLabel, c);
-
-        c.gridy = 12;
-        frame.add(vansAmountField, c);
-
-        c.gridy = 13;
-        frame.add(vansSpeedField, c);
-    }
-
-    private void infoLorries(JFrame frame) {
-
-        JLabel lorriesLabel = new JLabel("Lorries", JLabel.CENTER);
-        lorriesLabel.setFont(new Font("defaut", Font.BOLD, 12));
-
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        lorriesAmountField = new JFormattedTextField(numberFormat);
-        lorriesAmountField.setValue(new Integer(0));
-        lorriesAmountField.setBackground(Color.YELLOW);
-        lorriesAmountField.setEditable(false);
-        lorriesAmountField.setPreferredSize(new Dimension(50, 20));
-        lorriesAmountField.setHorizontalAlignment(JFormattedTextField.CENTER);
-
-        lorriesSpeedField = new JFormattedTextField(numberFormat);
-        lorriesSpeedField.setValue(new Integer(0));
-        lorriesSpeedField.setBackground(Color.GREEN);
-        lorriesSpeedField.setEditable(false);
-        lorriesSpeedField.setPreferredSize(new Dimension(50, 20));
-        lorriesSpeedField.setHorizontalAlignment(JFormattedTextField.CENTER);
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 6;
-        c.gridy = 11;
-        c.gridwidth = 1;
-        c.insets = new Insets(0, 5, 5, 285);
-        frame.add(lorriesLabel, c);
-
-        c.gridy = 12;
-        frame.add(lorriesAmountField, c);
-
-        c.gridy = 13;
-        frame.add(lorriesSpeedField, c);
+        frame.add(vehicleSpeedField, c);
     }
 
     private void updateView(Mat image) {
@@ -524,7 +437,6 @@ public class GUI {
         double time = (distanceCS / 3);
         double max = videoFPS * time;
         maxFPS = (int) max;
-
         oneFrameDuration = 1000 / (long) videoFPS;
     }
 
@@ -562,8 +474,6 @@ public class GUI {
                 resize(currentImage, currentImage, new Size(640, 360));
                 updateView(currentImage);
 
-                currentTimeField.setValue("0 sec");
-
                 isPaused = true;
                 playPauseButton.setText("Play");
                 playPauseButton.setEnabled(false);
@@ -584,12 +494,8 @@ public class GUI {
                 whichFrame = 0;
                 timeInSec = 0;
 
-                carsAmountField.setValue(new Integer(0));
-                carsSpeedField.setValue(new Integer(0));
-                vansAmountField.setValue(new Integer(0));
-                vansSpeedField.setValue(new Integer(0));
-                lorriesAmountField.setValue(new Integer(0));
-                lorriesSpeedField.setValue(new Integer(0));
+                vehicleAmountField.setValue(new Integer(0));
+                vehicleSpeedField.setValue(new Integer(0));
 
                 numberOfVehicles = 0;
                 sumSpeedVehicle = 0;
@@ -626,10 +532,8 @@ public class GUI {
                 if (lineSpeed2 != null && lineCount2 != null) {
                     playPauseButton.setEnabled(true);
                     resetButton.setEnabled(true);
-
                     Thread mainLoop = new Thread(new Loop());
                     mainLoop.start();
-
                     break;
                 }
             }
@@ -931,55 +835,6 @@ public class GUI {
 
         frame.add(BGSButton, c);
 
-    }
-
-    private void currentTime(JFrame frame) {
-
-        JLabel currentTimeLabel = new JLabel("Real time:", JLabel.RIGHT);
-        currentTimeLabel.setFont(new Font("Arial", Font.BOLD, 12));
-
-        currentTimeField = new JFormattedTextField();
-        currentTimeField.setValue("0 sec");
-        currentTimeField.setHorizontalAlignment(JFormattedTextField.CENTER);
-        currentTimeField.setEditable(false);
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-
-        c.gridx = 0;
-        c.gridy = 13;
-        c.gridwidth = 1;
-        c.insets = new Insets(0, 0, 0, 20);
-        frame.add(currentTimeLabel, c);
-        c.insets = new Insets(0, 0, 0, 40);
-        c.gridx = 1;
-        frame.add(currentTimeField, c);
-    }
-
-    private void setupRealTime(JFrame frame) {
-
-        realTimeButton = new JButton("Process in real time OFF");
-        realTimeButton.setPreferredSize(new Dimension(150, 35));
-        realTimeButton.addActionListener(event -> {
-            if (isProcessInRealTime) {
-                isProcessInRealTime = false;
-                realTimeButton.setText("Process in real time OFF");
-            } else {
-                isProcessInRealTime = true;
-                realTimeButton.setText("Process in real time ON");
-            }
-
-        });
-        realTimeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.gridx = 0;
-        c.gridy = 11;
-        c.gridwidth = 2;
-        c.gridheight = 2;
-
-        frame.add(realTimeButton, c);
     }
 
     private void setSystemLookAndFeel() {
