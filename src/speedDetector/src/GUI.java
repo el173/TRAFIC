@@ -4,6 +4,7 @@ import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
+import resources.Utils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,6 +18,8 @@ import java.util.HashMap;
 import static org.opencv.imgproc.Imgproc.resize;
 
 public class GUI {
+    private final int roadAllowedMax = 20;
+
     private JLabel imageView;
     private JFrame frame;
     private JFrame frameBGS;
@@ -203,7 +206,6 @@ public class GUI {
         }
     }
 
-
     public synchronized void count(CountVehicles countVehicles) throws WriteException {
         if (countVehicles.isVehicleToAdd()) {
             counter++;
@@ -232,6 +234,20 @@ public class GUI {
                 divisorVehicle++;
                 vehicleSpeedField.setValue(avgspeed3);
 
+                // Vehicle number is harcoded util it implement to to retrive from the video
+                String vehicleNumber = "CAC-6805";
+
+                if(avgspeed3 > roadAllowedMax) {
+                    Utils utils = new Utils();
+                    String url = "http://localhost:8080/traficTicket/issueTicket?"+"vch_number="+vehicleNumber+"&speed="+avgspeed3;
+                    String response = null;
+                    try {
+                        response = utils.sendGet(url);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(response);
+                }
 
                 speed.remove(firstTSM);
 
@@ -269,11 +285,11 @@ public class GUI {
         selectSpeedLine(frame);
         setupDistanceBetweenLines(frame);
 
-        setupImageThreshold(frame);
-        setupVideoHistory(frame);
+//        setupImageThreshold(frame);
+//        setupVideoHistory(frame);
         setupAreaThreshold(frame);
         setupVehicleSizeThreshold(frame);
-        setupBGSvisibility(frame);
+//        setupBGSvisibility(frame);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         return frame;
@@ -439,7 +455,6 @@ public class GUI {
         maxFPS = (int) max;
         oneFrameDuration = 1000 / (long) videoFPS;
     }
-
 
     public double computeSpeed(int speedPFS) {
         double duration = speedPFS / videoFPS;

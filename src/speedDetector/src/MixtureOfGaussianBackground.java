@@ -13,7 +13,6 @@ public class MixtureOfGaussianBackground implements VideoProcessor {
         mog.setShadowValue(0);
     }
 
-
     public Mat process(Mat inputImage) {
 
         mog.apply(inputImage, foreground, learningRate);

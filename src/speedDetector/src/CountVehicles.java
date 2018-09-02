@@ -77,15 +77,6 @@ public class CountVehicles {
         }
     }
 
-    public String classifier() {
-        double currentArea = Imgproc.contourArea(contourVehicle);
-        if (currentArea <= (double) vehicleSizeThreshold)
-            return "Car";
-        else if (currentArea <= 1.9 * (double) vehicleSizeThreshold)
-            return "Van";
-        else return "Lorry";
-    }
-
     private void drawBoundingBox(MatOfPoint currentContour) {
         Rect rectangle = Imgproc.boundingRect(currentContour);
         Imgproc.rectangle(image, rectangle.tl(), rectangle.br(), new Scalar(255, 0, 0), 1);

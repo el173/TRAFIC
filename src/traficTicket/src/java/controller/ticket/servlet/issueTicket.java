@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.ticket.servlet;
 
 import controller.ticket.action.Ticket;
@@ -37,30 +32,32 @@ public class issueTicket extends HttpServlet {
         response.addHeader("Access-Control-Allow-Origin", "*");
 
         JSONObject out_object = new JSONObject();
-        if ("POST".equals(request.getMethod())) {
+        if ("GET".equals(request.getMethod())) {
             try {
                 String vehicleNumber = request.getParameter("vch_number");
                 float speed = Float.parseFloat(request.getParameter("speed"));
-                
+
                 Vehicle vehicleAction = new Vehicle();
                 model.Vehicle vehicleByNumber = vehicleAction.getVehicleByNumber(vehicleNumber);
-                
-                if(vehicleByNumber != null) {
+
+                if (vehicleByNumber != null) {
                     Ticket ticketAction = new Ticket();
-                    if(ticketAction.addSpeedFineToTicket(vehicleByNumber, speed)) {
+                    if (ticketAction.addSpeedFineToTicket(vehicleByNumber, speed)) {
                         out_object.put("success", true);
                         out_object.put("info", "ticket_updated");
                         out_object.put("ticket_no", vehicleByNumber.getTicket().getIdticket());
+                    } else {
+                        out_object.put("success", false);
+                        out_object.put("error", "ticket_not_updated");
+                        out_object.put("info", "ticket_not_updated");
                     }
-                    out_object.put("success", false);
-                    out_object.put("error", "ticket_not_found");
-                    out_object.put("info", "ticket_not_updated");
-                }else {
+                } else {
                     out_object.put("success", false);
                     out_object.put("info", "vehicle_not_found");
                 }
-                
+
             } catch (Exception e) {
+//                e.printStackTrace();
                 out_object.put("success", false);
                 out_object.put("info", "error_in_action");
                 out_object.put("error", e.getMessage());
